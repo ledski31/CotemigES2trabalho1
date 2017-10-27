@@ -3,7 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Terminal {
+public class Terminal 
+
 	private int id;
 	private double total;
 	private List<Mov> extrato;
