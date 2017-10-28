@@ -1,5 +1,7 @@
+
 class Main {
 	public static void main(String[] args) {
-		System.out.println("terminal em instalação");
+		Terminal t1 = new Terminal();
+		t1.iniciarUI();
 	}
 }
