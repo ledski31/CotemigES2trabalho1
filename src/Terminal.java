@@ -28,6 +28,8 @@ public class Terminal {
 			say( key + "\n" );
 	}
 
+	
+
 	public void login() {
 		String msg = "";
 		while (true) {
@@ -39,17 +41,25 @@ public class Terminal {
 			msg = Conta.isIDparcial( id ) ? "" : "Numero de conta invalido. Tente novamente\n";
 			if( id.equals("x") ) System.exit(0);
 			else if( msg.length() == 0 ) {
-				getConta( id );
-				menu( id );
+				if( !existConta( id )) {
+					say( "\nConta nao existente. Deseja cria-la? (s/n)\n" + caret );
+					String in = input();
+					if( in.equals( "s" ))
+						criarConta( id );
+				}
+				if( existConta( id ))
+					menu( id );
 			}
 		}
 	}
+
 
 	private void menu( String idParcial ) {
 		String msg = "";
 		while (true) {
 			cabecalho();
-			say( "Conta " + idParcial + " FULANO DA SILVA SAURO\n" );
+			say( "Ola FULANO DA SILVA SAURO\n" );
+			say( "Conta " + idParcial + "\n" );
 			say( "\nOperacoes disponiveis\n" );
 			say( "x - Sair\nv - Voltar\n");
 			say( "\nConta corrente\n");
@@ -84,9 +94,19 @@ public class Terminal {
 
 	// METODOS DE OPERACOES INTERNAS
 
+	private boolean existConta( String id ) {
+		return (
+			contas.containsKey( id + Conta.codigoCC ) ||
+			contas.containsKey( id + Conta.codigoPP )
+		);
+	}
+
+	private void criarConta( String id ) {
+		contas.putIfAbsent( id + Conta.codigoCC, new Conta( id + Conta.codigoCC ));
+		contas.putIfAbsent( id + Conta.codigoCC, new Conta( id + Conta.codigoPP ));
+	}
+
 	public Conta getConta( String idCompleto ) {
-		if( Conta.isIDcompleto( idCompleto ))
-			contas.putIfAbsent( idCompleto, new Conta( idCompleto ));
 		return contas.get( idCompleto );
 	}
 
@@ -130,7 +150,7 @@ public class Terminal {
 
 	public String input() {
 		String in; 
-		do { in = sc.nextLine(); }
+		do { in = sc.nextLine().toLowerCase(); }
 		while ( in.length() == 0 );
 		return in;
 	}
