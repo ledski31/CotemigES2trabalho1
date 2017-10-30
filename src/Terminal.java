@@ -125,21 +125,49 @@ public class Terminal {
 		}
 		say( "\nConfirma o saque do valor " + val + "? (s/n)\n" + caret );
 		in = input();
-		if( in.equals( "s" ) )
-			say( "\nSaque: " + val );
+		if( in.equals( "s" ) ) {
+			Double sacado = c.saque( val );
+			if( sacado == val )
+				say( "\nSacado: " + val );
+			else 
+				say( "\nNao ha saldo suficiente" );
+			say( "\nSaldo: " + c.saldo() );
+		}
 		else
 			say( "\nOperacao cancelada" );
-			pressEnter();
+		say("\n...");
+		pressEnter();
 	}
 
 	private void saldo( Conta c ) {
-		System.out.println( "\nSaldo: " + String.valueOf( c.saldo() ) );
-		say( "..." );
+		say( "\nSaldo: " + String.valueOf( c.saldo() ) );
+		say( "\n..." );
 		pressEnter();
 	}
 
 	private void deposito( Conta c ) {
-
+		Double val = 0.0;
+		String in;
+		while( val == 0.0 ) {
+			say( "\nDigite o valor para deposito\n" + caret );
+			in = input();
+			try {
+				val = Double.valueOf( in );
+			} catch ( Exception e ) {
+				say( "\nO valor digitado e invalido" );		
+			}
+		}
+		say( "\nConfirma o deposito do valor " + val + "? (s/n)\n" + caret );
+		in = input();
+		if( in.equals( "s" ) ) {
+			c.deposito( val );
+			say( "\nDepositado: " + val );
+			say( "\nSaldo: " + c.saldo() );
+		}
+		else
+			say( "\nOperacao cancelada" );
+		say("\n...");
+		pressEnter();
 	}
 
 	private void extrato( Conta c ) {

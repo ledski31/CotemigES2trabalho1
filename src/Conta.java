@@ -55,7 +55,7 @@ public class Conta {
 
 	public double saque( double valor ) {
 		if( total > valor ) {
-			total -= valor;
+			this.total -= valor;
 			Movimentacao m = new Movimentacao(valor, total, Conta.Operacao.SAQUE, null);
 			extrato.add( m );
 			return valor;
@@ -64,8 +64,9 @@ public class Conta {
 	}
 
 	public boolean deposito( double valor ) {
+		System.out.println(" o valor a ser depositado é " + valor);
 		if( valor > 0 ) {
-			total += valor;
+			this.total += valor;
 			extrato.add( new Movimentacao(valor, total, Conta.Operacao.DEPOSITO, null));
 			return true;
 		}
