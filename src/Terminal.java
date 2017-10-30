@@ -46,7 +46,8 @@ public class Terminal {
 	}
 
 	private void menu( String idParcial ) {
-		String msg = "";
+		String msg = "\nOperacao invalida. Escolha novamente.\n";
+		boolean opcaoInvalida = false;
 		while (true) {
 			cabecalho();
 			say( "Conta " + idParcial + " FULANO DA SILVA SAURO\n" );
@@ -56,7 +57,7 @@ public class Terminal {
 			say( "1 - Saque\n2 - Deposito\n3 - Saldo\n4 - Extrato\n" );
 			say( "\nConta Poupanca\n");
 			say( "5 - Saque\n6 - Deposito\n7 - Saldo\n8 - Extrato\n" );
-			say( msg );
+			say( opcaoInvalida ? msg : "" );
 			say( caret );
 			
 			String op = input();
@@ -65,15 +66,15 @@ public class Terminal {
 			switch( op ) {
 				case "x": System.exit(0);
 				case "v": return;
-				case "1": saque( cc ); break;
-				case "2": deposito( cc ); break;
-				case "3": saldo( cc ); break;
-				case "4": extrato( cc ); break;
-				case "5": saque( pp ); break;
-				case "6": deposito( pp ); break;
-				case "7": saldo( pp ); break;
-				case "8": extrato( pp ); break;
-				default:	msg = "\nOperacao invalida. Escolha novamente.\n";
+				case "1": saque( cc ); opcaoInvalida = false; break;
+				case "2": deposito( cc ); opcaoInvalida = false; break;
+				case "3": saldo( cc ); opcaoInvalida = false; break;
+				case "4": extrato( cc ); opcaoInvalida = false; break;
+				case "5": saque( pp ); opcaoInvalida = false; break;
+				case "6": deposito( pp ); opcaoInvalida = false; break;
+				case "7": saldo( pp ); opcaoInvalida = false; break;
+				case "8": extrato( pp ); opcaoInvalida = false; break;
+				default:	opcaoInvalida = true;
 			}
 		}
 	}
@@ -108,11 +109,13 @@ public class Terminal {
 			say( "\nSaque: " + val );
 		else
 			say( "\nOperacao cancelada" );
-			espera();
+			pressEnter();
 	}
 
 	private void saldo( Conta c ) {
 		System.out.println( "\nSaldo: " + String.valueOf( c.saldo() ) );
+		say( "..." );
+		pressEnter();
 	}
 
 	private void deposito( Conta c ) {
@@ -133,6 +136,15 @@ public class Terminal {
 		do { in = sc.nextLine(); }
 		while ( in.length() == 0 );
 		return in;
+	}
+
+	public void pressEnter() {
+		try {
+			System.in.read();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void cabecalho() {
