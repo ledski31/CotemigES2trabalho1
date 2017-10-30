@@ -56,9 +56,12 @@ public class Terminal {
 
 	private void menu( String idParcial ) {
 		String msg = "";
+		Conta cc = getConta ( idParcial + Conta.codigoCC );
+		Conta pp = getConta ( idParcial + Conta.codigoPP );
+
 		while (true) {
 			cabecalho();
-			say( "Ola FULANO DA SILVA SAURO\n" );
+			say( "Ola " + cc.titular + "\n" );
 			say( "Conta " + idParcial + "\n" );
 			say( "\nOperacoes disponiveis\n" );
 			say( "x - Sair\nv - Voltar\n");
@@ -70,8 +73,6 @@ public class Terminal {
 			say( caret );
 			
 			String op = input();
-			Conta cc = getConta ( idParcial + Conta.codigoCC );
-			Conta pp = getConta ( idParcial + Conta.codigoPP );
 			switch( op ) {
 				case "x": System.exit(0);
 				case "v": return;
@@ -102,8 +103,17 @@ public class Terminal {
 	}
 
 	private void criarConta( String id ) {
-		contas.putIfAbsent( id + Conta.codigoCC, new Conta( id + Conta.codigoCC ));
-		contas.putIfAbsent( id + Conta.codigoCC, new Conta( id + Conta.codigoPP ));
+		String in;
+		String nome;
+		do {
+			say( "\nDigite o nome do titular\n" + caret );
+			nome = input().toUpperCase();
+			say( "\nO nome esta correto? (s/n)\n" + nome + "\n" + caret );
+			in = input();
+		}
+		while( !in.equals( "s" ) );
+		contas.putIfAbsent( id + Conta.codigoCC, new Conta( id + Conta.codigoCC, nome  ));
+		contas.putIfAbsent( id + Conta.codigoCC, new Conta( id + Conta.codigoPP, nome  ));
 	}
 
 	public Conta getConta( String idCompleto ) {

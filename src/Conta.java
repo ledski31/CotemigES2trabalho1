@@ -38,13 +38,15 @@ public class Conta {
 
 	/* PARTE INSTACIAVEL */
 
-	private String id;
+	public final String id;
+	public final String titular;
 	private double total;
 	private List<Movimentacao> extrato;
 	private Map<LocalDateTime, Movimentacao> historico;
 	
-	public Conta( String id ) {
+	public Conta( String id, String titular ) {
 		this.id = id;
+		this.titular = titular;
 		extrato = new ArrayList<Movimentacao>();
 		historico = new HashMap<LocalDateTime, Movimentacao>();
 	}
