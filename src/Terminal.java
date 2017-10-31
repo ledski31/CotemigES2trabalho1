@@ -1,7 +1,11 @@
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -19,15 +23,16 @@ public class Terminal {
 
 
 
-
-
+	// ================================================================================================================
 	// METODOS DE EXIBICAO NA TELA
 
 	public void listarContas() {
 		cabecalho();
-		say( "Contas existentes" );
+		say( "CONTAS EXISTENTES\n\n" );
 		for ( String key : contas.keySet() )
 			say( key + "\n" );
+		say("...");
+		pressEnter();
 	}
 
 	
@@ -41,19 +46,20 @@ public class Terminal {
 			say( caret );
 			String id = input();
 			msg = Conta.isIDparcial( id ) ? "" : "Numero de conta invalido. Tente novamente\n";
-			if( id.equals("x") ) System.exit(0);
+			if( id.equals("x") ) sair();
 			else if( msg.length() == 0 ) {
 				if( !existConta( id )) {
 					say( "\nConta nao existente. Deseja cria-la? (s/n)\n" + caret );
 					String in = input();
 					if( in.equals( "s" ))
-						criarConta( id );
+						createConta( id );
 				}
 				if( existConta( id ))
 					menu( id );
 			}
 		}
 	}
+
 
 
 	private void menu( String idParcial ) {
@@ -77,7 +83,7 @@ public class Terminal {
 			
 			String op = input();
 			switch( op ) {
-				case "x": System.exit(0);
+				case "x": sair();
 				case "v": return;
 				case "1": saque( cc ); opcaoInvalida = false; break;
 				case "2": deposito( cc ); opcaoInvalida = false; break;
@@ -94,9 +100,8 @@ public class Terminal {
 
 
 
-
-
-	// METODOS DE OPERACOES INTERNAS
+	// ================================================================================================================
+	// METODOS DE CONFIGURACAO DE CONTA
 
 	private boolean existConta( String id ) {
 		return (
@@ -105,7 +110,9 @@ public class Terminal {
 		);
 	}
 
-	private void criarConta( String id ) {
+
+
+	private void createConta( String id ) {
 		String in;
 		String nome;
 		do {
@@ -119,9 +126,56 @@ public class Terminal {
 		contas.putIfAbsent( id + Conta.codigoPP, new Conta( id + Conta.codigoPP, nome  ));
 	}
 
+
+
 	public Conta getConta( String idCompleto ) {
 		return contas.get( idCompleto );
 	}
+
+
+	
+	public void salvarContas() {
+		FileOutputStream fos;
+		ObjectOutputStream oos;
+		try {
+			fos = new FileOutputStream("contas.obj");
+			oos = new ObjectOutputStream(fos);
+			oos.writeObject( contas );
+			oos.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}
+
+
+
+	public void carregarContas( String filepath ) {
+		FileInputStream fis;
+		ObjectInputStream ois;
+		try {
+			fis = new FileInputStream( filepath );
+			ois = new ObjectInputStream(fis);
+			this.contas = (Map<String, Conta>) ois.readObject();
+			ois.close();
+		} catch (FileNotFoundException e) {
+			// e.printStackTrace();
+			say( "\nO arquivo "+filepath+" não foi encontrado. Nao será possivel carregar contas salvas anteriormente\n");
+			pressEnter();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+
+	// ================================================================================================================
+	// METODOS DE MOVIMENTACOES DE CONTA
+
+
 
 	private void saque( Conta c ) {
 		Double val = 0.0;
@@ -149,11 +203,15 @@ public class Terminal {
 		pressEnter();
 	}
 
+
+
 	private void saldo( Conta c ) {
 		say( "\nSaldo: " + String.valueOf( c.saldo() ) );
 		say( "\n..." );
 		pressEnter();
 	}
+
+
 
 	private void deposito( Conta c ) {
 		Double val = 0.0;
@@ -180,6 +238,8 @@ public class Terminal {
 		pressEnter();
 	}
 
+
+
 	private void extrato( Conta c ) {
 		StringBuilder sb = new StringBuilder();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM HH:mm");
@@ -199,9 +259,10 @@ public class Terminal {
 
 
 
+	// ================================================================================================================
+	// METODOS AUXILIARES
 
 
-	// METODOS AUXILIARES ==========================================================
 
 	public String input() {
 		String in; 
@@ -279,6 +340,11 @@ public class Terminal {
 		// 	sb.append( " " );
 		
 		// return sb.toString();
+	}
+
+	private void sair() {
+		salvarContas();
+		System.exit(0);
 	}
 	
 }
