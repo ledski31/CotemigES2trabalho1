@@ -1,11 +1,14 @@
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Conta {
+public class Conta implements Serializable {
 
-	/*	PARTE ESTATICA */
+	// ================================================================================================================
+	//	PARTE ESTATICA
 
+	private static final long serialVersionUID = 1L;
 	public static final String[] Operacoes = {"SAQUE","DEPOSITO","SALDO","EXTRATO"};
 	public static enum Operacao {
 		SAQUE, DEPOSITO, SALDO, EXTRATO
@@ -32,10 +35,11 @@ public class Conta {
 
 
 
+	// ================================================================================================================
+	// PARTE INSTANCIAVEL
 
 
-	/* PARTE INSTACIAVEL */
-
+	
 	public final String id;
 	public final String titular;
 	private double total = 0;
@@ -85,11 +89,13 @@ public class Conta {
 
 
 
-
-
+// ================================================================================================================
 // CLASSE AUXILIARES
 
-class Movimentacao {
+
+
+class Movimentacao implements Serializable {
+	private static final long serialVersionUID = 1L;
 	public LocalDateTime data;
 	public double valor;
 	public double saldo;
