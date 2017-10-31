@@ -114,7 +114,7 @@ public class Terminal {
 		}
 		while( !in.equals( "s" ) );
 		contas.putIfAbsent( id + Conta.codigoCC, new Conta( id + Conta.codigoCC, nome  ));
-		contas.putIfAbsent( id + Conta.codigoCC, new Conta( id + Conta.codigoPP, nome  ));
+		contas.putIfAbsent( id + Conta.codigoPP, new Conta( id + Conta.codigoPP, nome  ));
 	}
 
 	public Conta getConta( String idCompleto ) {
