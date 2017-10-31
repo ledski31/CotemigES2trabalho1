@@ -273,6 +273,7 @@ public class Terminal {
 
 	public void pressEnter() {
 		try {
+			say("\nPressione Enter...");
 			System.in.read();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
