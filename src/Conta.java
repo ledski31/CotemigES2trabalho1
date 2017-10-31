@@ -1,8 +1,6 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Conta {
 
@@ -40,15 +38,13 @@ public class Conta {
 
 	public final String id;
 	public final String titular;
-	private double total;
+	private double total = 0;
 	private List<Movimentacao> extrato;
-	private Map<LocalDateTime, Movimentacao> historico;
 	
 	public Conta( String id, String titular ) {
 		this.id = id;
 		this.titular = titular;
 		extrato = new ArrayList<Movimentacao>();
-		historico = new HashMap<LocalDateTime, Movimentacao>();
 	}
 
 	public String getId() {
@@ -58,7 +54,7 @@ public class Conta {
 	public double saque( double valor ) {
 		if( total > valor ) {
 			this.total -= valor;
-			Movimentacao m = new Movimentacao(valor, total, Conta.Operacao.SAQUE, null);
+			Movimentacao m = new Movimentacao(valor * -1.0, total, Conta.Operacao.SAQUE, "");
 			extrato.add( m );
 			return valor;
 		}
@@ -66,10 +62,9 @@ public class Conta {
 	}
 
 	public boolean deposito( double valor ) {
-		System.out.println(" o valor a ser depositado é " + valor);
 		if( valor > 0 ) {
 			this.total += valor;
-			extrato.add( new Movimentacao(valor, total, Conta.Operacao.DEPOSITO, null));
+			extrato.add( new Movimentacao(valor, total, Conta.Operacao.DEPOSITO, ""));
 			return true;
 		}
 		return false;
@@ -79,8 +74,11 @@ public class Conta {
 		return total;
 	}
 
-	public void Extrato() {
-
+	public List<Movimentacao> extrato() {
+		List<Movimentacao> extratoCopia = new ArrayList<>();
+		for( Movimentacao m : extrato )
+			extratoCopia.add( new Movimentacao( m ));
+		return extratoCopia;
 	}
 
 }
@@ -95,13 +93,22 @@ class Movimentacao {
 	public LocalDateTime data;
 	public double valor;
 	public double saldo;
-	public int operacao;
+	public Conta.Operacao operacao;
 	public String parametro;
 
 	public Movimentacao(double valor, double total, Conta.Operacao operacao, String parametro) {
-		this.saldo = total + valor;
 		this.data = LocalDateTime.now();
+		this.operacao = operacao;
 		this.valor = valor;
+		this.saldo = total;
 		this.parametro = parametro;
+	}
+
+	public Movimentacao ( Movimentacao m ) {
+		this.operacao = m.operacao;
+		this.data = m.data;
+		this.valor = m.valor;
+		this.saldo = m.saldo;
+		this.parametro = m.parametro;
 	}
 }

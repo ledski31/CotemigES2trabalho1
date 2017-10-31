@@ -1,5 +1,7 @@
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -181,6 +183,20 @@ public class Terminal {
 	}
 
 	private void extrato( Conta c ) {
+		StringBuilder sb = new StringBuilder();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM HH:mm");
+		sb.append( "===============================================================\n" );
+		sb.append( "EXTRATO DA CONTA " + c.getId() + "\n" );
+		sb.append( "===============================================================\n" );
+		sb.append( field( "DATA" ) + field( "OPERACAO" ) + field ( "VALOR" ) + field( "SALDO" ) + "\n" );
+		sb.append( "===============================================================\n" );
+		for( Movimentacao m : c.extrato() )
+			sb.append( field( m.data.format(formatter) ) + field( m.operacao.name() ) + field( m.valor ) + field( m.saldo ) + field( m.parametro ) + "\n" );
+			// sb.append( m.operacao.name() + "\t" + m.valor + "\t" + m.saldo + "\t" + m.parametro + "\n" );
+		sb.append( "===============================================================\n" );
+		cabecalho();
+		say( sb.toString() );
+		pressEnter();
 	}
 
 
@@ -238,4 +254,33 @@ public class Terminal {
 			TimeUnit.SECONDS.sleep(1);
 		} catch (InterruptedException e) {}
 	}
+
+	public String field( Double text ) {
+		return field( String.valueOf( text ));
+	}
+	public String field( int text ) {
+		return field( String.valueOf( text ));
+	}
+	public String field( String text ) {
+		int fieldSize = 15;
+		if( text.length() > fieldSize )
+			 text = text.substring(0, fieldSize-1 );
+		char[] fill = new char[fieldSize - text.length()];
+		for( int i = 0; i < fill.length; i++ )
+			fill[i] = ' ';
+		return text + new String( fill );
+
+		//String.format("%"+length+"s", str).replace(' ', fill);
+
+		// int fieldSize = 20;
+		// if( text.length() > fieldSize )
+		// 	 text = text.substring(0, fieldSize-1 );
+		// StringBuilder sb = new StringBuilder();
+		// sb.append( text );
+		// for( int i = 0; i < ( fieldSize - text.length() ); i++ )
+		// 	sb.append( " " );
+		
+		// return sb.toString();
+	}
+	
 }
