@@ -1,8 +1,6 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Conta {
 
@@ -38,13 +36,14 @@ public class Conta {
 
 	/* PARTE INSTACIAVEL */
 
-	private String id;
+	public final String id;
+	public final String titular;
 	private double total = 0;
 	private List<Movimentacao> extrato;
-	private Map<LocalDateTime, Movimentacao> historico;
 	
-	public Conta( String id ) {
+	public Conta( String id, String titular ) {
 		this.id = id;
+		this.titular = titular;
 		extrato = new ArrayList<Movimentacao>();
 	}
 
