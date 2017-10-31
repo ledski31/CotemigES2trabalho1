@@ -5,8 +5,7 @@ import java.util.List;
 public class Conta {
 
 	/*	PARTE ESTATICA */
-
-	public static final String[] Operacoes = {"SAQUE","DEPOSITO","SALDO","EXTRATO"};
+	
 	public static enum Operacao {
 		SAQUE, DEPOSITO, SALDO, EXTRATO
 	}

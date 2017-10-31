@@ -139,9 +139,7 @@ public class Terminal {
 		in = input();
 		if( in.equals( "s" ) ) {
 			Double sacado = c.saque( val );
-			if( sacado == val )
-				say( "\nSacado: " + val );
-			else 
+			if( sacado == 0 )
 				say( "\nNao ha saldo suficiente" );
 			say( "\nSaldo: " + c.saldo() );
 		}
@@ -173,7 +171,7 @@ public class Terminal {
 		in = input();
 		if( in.equals( "s" ) ) {
 			c.deposito( val );
-			say( "\nDepositado: " + val );
+			// say( "\nDepositado: " + val );
 			say( "\nSaldo: " + c.saldo() );
 		}
 		else
