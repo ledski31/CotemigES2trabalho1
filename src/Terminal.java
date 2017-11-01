@@ -15,24 +15,39 @@ public class Terminal {
 	private Map<String, Conta> contas = new HashMap<>();
 	private Scanner sc = new Scanner( System.in );
 	private final String caret = "\n:";
+	private final String savefilePath;
 
-	public Terminal( Map<String, Conta> contas ) {
-		this.contas = contas;
+	public Terminal() {
+		this.savefilePath = null;
 	}
-	public Terminal() {}
+	public Terminal( String savefilePath ) {
+		this.savefilePath = savefilePath;
+	}
 
 
 
 	// ================================================================================================================
 	// METODOS DE EXIBICAO NA TELA
 
-	public void listarContas() {
-		cabecalho();
-		say( "CONTAS EXISTENTES\n\n" );
-		for ( String key : contas.keySet() )
-			say( key + "\n" );
-		say("...");
-		pressEnter();
+	public void iniciar() {
+		boolean carregou = carregarContas( this.savefilePath );
+		if( !carregou ) {
+			cabecalho();
+			say( "Nenhuma conta pre-existente\n" );
+			pressEnter();
+		}
+		else if ( !contas.isEmpty() ) {
+			cabecalho();
+			say( "CONTAS EXISTENTES\n\n" );
+			for ( String key : contas.keySet() ) {
+				say( key );
+				if( Conta.isIDcc( key )) say( " (CORRENTE)" );
+				else if( Conta.isIDpp( key )) say( " (POUPANCA)");
+				say( " - " + contas.get( key ).titular + "\n" );
+			}
+			pressEnter();
+		}
+		login();
 	}
 
 	
@@ -151,23 +166,27 @@ public class Terminal {
 
 
 
-	public void carregarContas( String filepath ) {
-		FileInputStream fis;
-		ObjectInputStream ois;
-		try {
-			fis = new FileInputStream( filepath );
-			ois = new ObjectInputStream(fis);
-			this.contas = (Map<String, Conta>) ois.readObject();
-			ois.close();
-		} catch (FileNotFoundException e) {
-			// e.printStackTrace();
-			say( "\nO arquivo "+filepath+" não foi encontrado. Nao será possivel carregar contas salvas anteriormente\n");
-			pressEnter();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+	public boolean carregarContas( String filepath ) {
+		if( this.savefilePath != null ) {
+			FileInputStream fis;
+			ObjectInputStream ois;
+			try {
+				fis = new FileInputStream( filepath );
+				ois = new ObjectInputStream(fis);
+				this.contas = (Map<String, Conta>) ois.readObject();
+				ois.close();
+				return true;
+			} catch (FileNotFoundException e) {
+				// say( "\nO arquivo "+filepath+" nao foi encontrado. Nao sera possivel carregar contas salvas anteriormente\n");
+				// pressEnter();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			return false;
 		}
+		else return false;
 	}
 
 
@@ -243,8 +262,11 @@ public class Terminal {
 	private void extrato( Conta c ) {
 		StringBuilder sb = new StringBuilder();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM HH:mm");
+		String tipo = "";
+		if( Conta.isIDcc( c.getId() )) tipo = " (CORRENTE)" ;
+		else if( Conta.isIDpp( c.getId() )) tipo = " (POUPANCA)" ;
 		sb.append( "===============================================================\n" );
-		sb.append( "EXTRATO DA CONTA " + c.getId() + "\n" );
+		sb.append( "EXTRATO DA CONTA " + c.getId() + tipo + "\n" );
 		sb.append( "===============================================================\n" );
 		sb.append( field( "DATA" ) + field( "OPERACAO" ) + field ( "VALOR" ) + field( "SALDO" ) + "\n" );
 		sb.append( "===============================================================\n" );

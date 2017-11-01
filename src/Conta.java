@@ -23,6 +23,14 @@ public class Conta implements Serializable {
 		return id.matches( "[0-9]{3}-[01]" );
 	}
 
+	public static boolean isIDcc( String id ) {
+		return id.matches( "[0-9]{3}-0" );
+	}
+
+	public static boolean isIDpp( String id ) {
+		return id.matches( "[0-9]{3}-1" );
+	}
+
 	public static String sayTipo( String id ) {
 		if( isIDparcial(id) ) {
 			String tipo = id.substring(id.length() - 2);
