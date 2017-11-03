@@ -78,7 +78,7 @@ public class Terminal {
 
 
 	private void menu( String idParcial ) {
-		String msg = "";
+		String msg = "\nOpcao invalida, tente novamente\n";
 		Conta cc = getConta ( idParcial + Conta.codigoCC );
 		Conta pp = getConta ( idParcial + Conta.codigoPP );
 		boolean opcaoInvalida = false;
