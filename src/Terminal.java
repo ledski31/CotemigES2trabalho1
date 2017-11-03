@@ -90,9 +90,9 @@ public class Terminal {
 			say( "\nOperacoes disponiveis\n" );
 			say( "x - Sair\nv - Voltar\n");
 			say( "\nConta corrente\n");
-			say( "1 - Saque\n2 - Deposito\n3 - Saldo\n4 - Extrato\n" );
+			say( "cq - Saque\ncd - Deposito\ncs - Saldo\nce - Extrato\nct - Transferencia\n" );
 			say( "\nConta Poupanca\n");
-			say( "5 - Saque\n6 - Deposito\n7 - Saldo\n8 - Extrato\n" );
+			say( "pq - Saque\npd - Deposito\npe - Saldo\npe - Extrato\npt - Transferencia\n" );
 			say( opcaoInvalida ? msg : "" );
 			say( caret );
 			
@@ -100,14 +100,16 @@ public class Terminal {
 			switch( op ) {
 				case "x": sair();
 				case "v": return;
-				case "1": saque( cc ); opcaoInvalida = false; break;
-				case "2": deposito( cc ); opcaoInvalida = false; break;
-				case "3": saldo( cc ); opcaoInvalida = false; break;
-				case "4": extrato( cc ); opcaoInvalida = false; break;
-				case "5": saque( pp ); opcaoInvalida = false; break;
-				case "6": deposito( pp ); opcaoInvalida = false; break;
-				case "7": saldo( pp ); opcaoInvalida = false; break;
-				case "8": extrato( pp ); opcaoInvalida = false; break;
+				case "cq": saque( cc ); opcaoInvalida = false; break;
+				case "cd": deposito( cc ); opcaoInvalida = false; break;
+				case "cs": saldo( cc ); opcaoInvalida = false; break;
+				case "ce": extrato( cc ); opcaoInvalida = false; break;
+				case "ct": transfer( cc ); opcaoInvalida = false; break;
+				case "pq": saque( pp ); opcaoInvalida = false; break;
+				case "pd": deposito( pp ); opcaoInvalida = false; break;
+				case "ps": saldo( pp ); opcaoInvalida = false; break;
+				case "pe": extrato( pp ); opcaoInvalida = false; break;
+				case "pt": transfer( pp ); opcaoInvalida = false; break;
 				default:	opcaoInvalida = true;
 			}
 		}
@@ -277,6 +279,12 @@ public class Terminal {
 		cabecalho();
 		say( sb.toString() );
 		pressEnter();
+	}
+
+
+
+	private void transfer( Conta c ) {
+		
 	}
 
 
