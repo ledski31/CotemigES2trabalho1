@@ -92,6 +92,10 @@ public class Conta implements Serializable {
 		return extratoCopia;
 	}
 
+	public void transfer() {
+		
+	}
+
 }
 
 
