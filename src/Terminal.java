@@ -284,7 +284,44 @@ public class Terminal {
 
 
 	private void transfer( Conta c ) {
-		
+		Double val = 0.0;
+		String in;
+		while( val == 0.0 ) {
+			say( "\nDigite o valor a ser transferido\n" + caret );
+			in = input();
+			try {
+				val = Double.valueOf( in );
+			} catch ( Exception e ) {
+				say( "\nO valor digitado e invalido" );		
+			}
+		}
+		if( c.saldo() < val ) {
+			say( "\nNao ha saldo suficiente" );
+			say( "\nSaldo: " + c.saldo() );
+			say( "\nOperacao cancelada" );
+			pressEnter();
+		}
+		else {
+			do {
+				say( "\nDigite a conta a ser creditada no formato XXX-M onde:" );
+				say( "\nXXX = numero da conta" );
+				say( "\nM = 0 (conta corrente) ou = 1 (poupanca)" );
+				say( "\nOu digite v para voltar\n");
+				say( caret );
+				in = input();
+			}
+			while( !Conta.isIDcompleto( in ) && !in.toUpperCase().equals("V") ); 
+			if( in.toUpperCase().equals("V") ) {
+				say( "\nOperacao cancelada" );
+				pressEnter();
+			}
+			else {
+				say( "\nOperacao nao disponivel ainda" );
+				pressEnter();
+			}
+		}		
+
+		pressEnter();
 	}
 
 
