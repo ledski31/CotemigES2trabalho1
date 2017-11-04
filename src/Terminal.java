@@ -310,11 +310,10 @@ public class Terminal {
 			return;
 		}
 		else {
-			say( "\nFuncionalidade em desenvolvimento\n" );
-			// if( c.transfer(valor, contaDestino) )
-			// 	say( "\nO valor foi transferido\n" );
-			// else
-			// 	say( "\nNao foi possivel fazer a transferencia\n" );
+			if( c.transfer(valor, contaDestino) )
+				say( "\nO valor foi transferido\n" );
+			else
+			 	say( "\nNao foi possivel fazer a transferencia\n" );
 		}
 		pressEnter();
 		return;

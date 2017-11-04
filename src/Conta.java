@@ -73,9 +73,12 @@ public class Conta implements Serializable {
 	}
 
 	public boolean deposito( double valor ) {
+		return deposito( valor, "" );
+	}
+	private boolean deposito( double valor, String origem ) {
 		if( valor > 0 ) {
 			this.total += valor;
-			extrato.add( new Movimentacao(valor, total, Conta.Operacao.DEPOSITO, ""));
+			extrato.add( new Movimentacao( valor, total, Conta.Operacao.DEPOSITO, origem ));
 			return true;
 		}
 		return false;
@@ -92,8 +95,16 @@ public class Conta implements Serializable {
 		return extratoCopia;
 	}
 
-	public void transfer() {
-		
+	public boolean transfer( double valor, Conta c ) {
+		return true;
+		// if( valor > 0 || this.total < valor ) 
+		// 	return false;
+		// else {
+		// 	this.total -= valor;
+		// 	c.deposito( valor, "de " + this.id );
+		// 	extrato.add( new Movimentacao(valor, total, Conta.Operacao.DEPOSITO, "para " + c.id ));
+		// 	return true;
+		// }
 	}
 
 }
