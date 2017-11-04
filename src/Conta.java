@@ -10,7 +10,7 @@ public class Conta implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	public static enum Operacao {
-		SAQUE, DEPOSITO, SALDO, EXTRATO
+		SAQUE, DEPOSITO, SALDO, EXTRATO, TRANSFER
 	}
 	public static final String codigoCC = "-0";
 	public static final String codigoPP = "-1";
@@ -96,15 +96,14 @@ public class Conta implements Serializable {
 	}
 
 	public boolean transfer( double valor, Conta c ) {
-		return true;
-		// if( valor > 0 || this.total < valor ) 
-		// 	return false;
-		// else {
-		// 	this.total -= valor;
-		// 	c.deposito( valor, "de " + this.id );
-		// 	extrato.add( new Movimentacao(valor, total, Conta.Operacao.DEPOSITO, "para " + c.id ));
-		// 	return true;
-		// }
+		if( valor < 0 || this.total < valor ) 
+			return false;
+		else {
+			this.total -= valor;
+			c.deposito( valor, "de " + this.id );
+			extrato.add( new Movimentacao( valor * -1, total, Conta.Operacao.TRANSFER, "para " + c.id ));
+			return true;
+		}
 	}
 
 }
