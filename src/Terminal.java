@@ -264,11 +264,8 @@ public class Terminal {
 	private void extrato( Conta c ) {
 		StringBuilder sb = new StringBuilder();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM HH:mm");
-		String tipo = "";
-		if( Conta.isIDcc( c.getId() )) tipo = " (CORRENTE)" ;
-		else if( Conta.isIDpp( c.getId() )) tipo = " (POUPANCA)" ;
 		sb.append( "===============================================================\n" );
-		sb.append( "EXTRATO DA CONTA " + c.getId() + tipo + "\n" );
+		sb.append( "EXTRATO DA CONTA " + c.getId() + tipoDeConta( c ) + "\n" );
 		sb.append( "===============================================================\n" );
 		sb.append( field( "DATA" ) + field( "OPERACAO" ) + field ( "VALOR" ) + field( "SALDO" ) + "\n" );
 		sb.append( "===============================================================\n" );
@@ -284,44 +281,43 @@ public class Terminal {
 
 
 	private void transfer( Conta c ) {
-		Double val = 0.0;
-		String in;
-		while( val == 0.0 ) {
-			say( "\nDigite o valor a ser transferido\n" + caret );
-			in = input();
-			try {
-				val = Double.valueOf( in );
-			} catch ( Exception e ) {
-				say( "\nO valor digitado e invalido" );		
-			}
-		}
-		if( c.saldo() < val ) {
+
+		Double valor = inputValor();
+		if( c.saldo() < valor ) {
 			say( "\nNao ha saldo suficiente" );
 			say( "\nSaldo: " + c.saldo() );
 			say( "\nOperacao cancelada" );
 			pressEnter();
+			return;
+		}
+		
+		Conta contaDestino = inputContaDestino();
+		if( contaDestino == null ) {
+			say( "\nOperacao cancelada" );
+			pressEnter();
+			return;
+		}
+		
+		say( "\nConfirma a transferencia de " + valor );
+		say( "\npara " + contaDestino.titular );
+		say( "\nconta " + contaDestino.id + tipoDeConta( contaDestino ));
+		say( "\n(s/n)\n" );
+		say( caret );
+		String in = input();
+		if( in.toLowerCase().equals( "n" ) ) {
+			say( "\nOperacao cancelada" );
+			pressEnter();
+			return;
 		}
 		else {
-			do {
-				say( "\nDigite a conta a ser creditada no formato XXX-M onde:" );
-				say( "\nXXX = numero da conta" );
-				say( "\nM = 0 (conta corrente) ou = 1 (poupanca)" );
-				say( "\nOu digite v para voltar\n");
-				say( caret );
-				in = input();
-			}
-			while( !Conta.isIDcompleto( in ) && !in.toUpperCase().equals("V") ); 
-			if( in.toUpperCase().equals("V") ) {
-				say( "\nOperacao cancelada" );
-				pressEnter();
-			}
-			else {
-				say( "\nOperacao nao disponivel ainda" );
-				pressEnter();
-			}
-		}		
-
+			say( "\nFuncionalidade em desenvolvimento\n" );
+			// if( c.transfer(valor, contaDestino) )
+			// 	say( "\nO valor foi transferido\n" );
+			// else
+			// 	say( "\nNao foi possivel fazer a transferencia\n" );
+		}
 		pressEnter();
+		return;
 	}
 
 
@@ -338,6 +334,60 @@ public class Terminal {
 		return in;
 	}
 
+
+
+	public double inputValor() {
+		Double val = 0.0;
+		String in;
+		while( val == 0.0 ) {
+			say( "\nDigite o valor\n" + caret );
+			in = input();
+			try {
+				val = Double.valueOf( in );
+			} catch ( Exception e ) {
+				say( "\nO valor digitado e invalido" );
+			}
+		}
+		return val;
+	 }
+
+
+
+	public Conta inputContaDestino() {
+		String in;
+		say( "\nDigite a conta a ser creditada no formato XXX-V onde" );
+		say( "\nXXX representa o numero da conta" );
+		say( "\nV representa a variacao ( 0 = conta corrente; 1 = poupanca)" );
+		say( "\nOu digite x para cancelar\n");
+		while( true ) {
+			say( caret );
+			in = input();
+			if( in.toLowerCase().equals( "x" ) ) {
+				return null;
+			}
+			else if( !Conta.isIDcompleto( in )){
+				say( "\nO numero de conta digitado e invalido, tente novamente\n" );
+			}
+			else if( getConta( in ) == null ) {
+				say( "\nA conta digitada nao foi encontrada, digite outra conta\n" );
+			}
+			else {
+				return getConta( in );
+			}
+		}	
+	}
+
+
+
+	private String tipoDeConta( Conta c ) {
+		String tipo = "";
+		if( Conta.isIDcc( c.getId() )) tipo = " (CORRENTE)" ;
+		else if( Conta.isIDpp( c.getId() )) tipo = " (POUPANCA)" ;
+		return tipo;
+	}
+
+
+
 	public void pressEnter() {
 		try {
 			say("\nPressione Enter...");
@@ -348,11 +398,15 @@ public class Terminal {
 		}
 	}
 
+
+
 	private void cabecalho() {
 		clear();
 		System.out.println( "Terminal Bancario via texto\n" );
 		//say( "\n===============================================\n\n" );
 	}
+
+
 
 	private void clear() {
 		final String os = System.getProperty("os.name");
@@ -372,9 +426,13 @@ public class Terminal {
 			}
 	}
 
+
+
 	private void say( String s ) {
 		System.out.print( s );
 	}
+
+
 
 	private void espera() {
 		try {
@@ -382,12 +440,20 @@ public class Terminal {
 		} catch (InterruptedException e) {}
 	}
 
+
+
 	public String field( Double text ) {
 		return field( String.valueOf( text ));
 	}
+
+
+
 	public String field( int text ) {
 		return field( String.valueOf( text ));
 	}
+
+
+
 	public String field( String text ) {
 		int fieldSize = 15;
 		if( text.length() > fieldSize )
