@@ -266,15 +266,15 @@ public class Terminal {
 	private void extrato( Conta c ) {
 		StringBuilder sb = new StringBuilder();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM HH:mm");
-		sb.append( "===============================================================\n" );
+		sb.append( "======================================================================\n" );
 		sb.append( "EXTRATO DA CONTA " + c.getId() + tipoDeConta( c ) + "\n" );
-		sb.append( "===============================================================\n" );
-		sb.append( field( "DATA" ) + field( "OPERACAO" ) + field ( "VALOR" ) + field( "SALDO" ) + "\n" );
-		sb.append( "===============================================================\n" );
+		sb.append( "======================================================================\n" );
+		sb.append( field( "DATA" ) + field( "OPERACAO" ) + field ( "VALOR" ) + field( "SALDO" ) + field( "OBS" ) + "\n" );
+		sb.append( "======================================================================\n" );
 		for( Movimentacao m : c.extrato() )
 			sb.append( field( m.data.format(formatter) ) + field( m.operacao.name() ) + field( m.valor ) + field( m.saldo ) + field( m.parametro ) + "\n" );
 			// sb.append( m.operacao.name() + "\t" + m.valor + "\t" + m.saldo + "\t" + m.parametro + "\n" );
-		sb.append( "===============================================================\n" );
+		sb.append( "======================================================================\n" );
 		cabecalho();
 		say( sb.toString() );
 		pressEnter();
