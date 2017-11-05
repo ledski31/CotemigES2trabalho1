@@ -30,24 +30,26 @@ public class Terminal {
 	// METODOS DE EXIBICAO NA TELA
 
 	public void iniciar() {
-		boolean carregou = carregarContas( this.savefilePath );
-		if( !carregou ) {
-			cabecalho();
-			say( "Nenhuma conta pre-existente\n" );
-			pressEnter();
+		carregarContas( this.savefilePath );
+		login();
+	}
+
+
+
+	public void listarContas() {
+		// cabecalho();
+		say( "CONTAS EXISTENTES\n\n" );
+		if( contas.isEmpty() ) {
+			say( "Nenhuma conta encontrada\n" );
 		}
-		else if ( !contas.isEmpty() ) {
-			cabecalho();
-			say( "CONTAS EXISTENTES\n\n" );
-			for ( String key : contas.keySet() ) {
-				say( key );
-				if( Conta.isIDcc( key )) say( " (CORRENTE)" );
-				else if( Conta.isIDpp( key )) say( " (POUPANCA)");
+		else for ( String key : contas.keySet() ) {
+			if( Conta.isIDcc( key )) {
+				say( key.substring(0, 3) );
 				say( " - " + contas.get( key ).titular + "\n" );
 			}
-			pressEnter();
 		}
-		login();
+		say( "\n" );
+		// pressEnter();
 	}
 
 	
@@ -56,7 +58,10 @@ public class Terminal {
 		String msg = "";
 		while (true) {
 			cabecalho();
-			say( "Digite o numero da conta (XXX) ou 'x' para sair\n" );
+			listarContas();
+			// say( "Digite 'l' para listar as contas existentes\n" );
+			say( "Digite 'x' para sair\n" );
+			say( "Digite o numero da conta (XXX) para acessa-la\n" );
 			say( msg );
 			say( caret );
 			String id = input();
@@ -220,7 +225,6 @@ public class Terminal {
 		}
 		else
 			say( "\nOperacao cancelada" );
-		say("\n...");
 		pressEnter();
 	}
 
@@ -228,7 +232,6 @@ public class Terminal {
 
 	private void saldo( Conta c ) {
 		say( "\nSaldo: " + String.valueOf( c.saldo() ) );
-		say( "\n..." );
 		pressEnter();
 	}
 
@@ -255,7 +258,6 @@ public class Terminal {
 		}
 		else
 			say( "\nOperacao cancelada" );
-		say("\n...");
 		pressEnter();
 	}
 
@@ -311,9 +313,9 @@ public class Terminal {
 		}
 		else {
 			if( c.transfer(valor, contaDestino) )
-				say( "\nO valor foi transferido\n" );
+				say( "\nO valor foi transferido" );
 			else
-			 	say( "\nNao foi possivel fazer a transferencia\n" );
+			 	say( "\nNao foi possivel fazer a transferencia" );
 		}
 		pressEnter();
 		return;
