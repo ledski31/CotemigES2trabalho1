@@ -268,6 +268,7 @@ public class Terminal {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM HH:mm");
 		sb.append( "======================================================================\n" );
 		sb.append( "EXTRATO DA CONTA " + c.getId() + tipoDeConta( c ) + "\n" );
+		sb.append( c.titular + "\n" );
 		sb.append( "======================================================================\n" );
 		sb.append( field( "DATA" ) + field( "OPERACAO" ) + field ( "VALOR" ) + field( "SALDO" ) + field( "OBS" ) + "\n" );
 		sb.append( "======================================================================\n" );
