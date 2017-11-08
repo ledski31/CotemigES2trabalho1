@@ -94,7 +94,7 @@ public class Terminal {
 			say( "Conta " + idParcial + "\n" );
 			say( "\nOperacoes disponiveis\n" );
 			say( "x - Sair\nv - Voltar\n");
-			say( "\nConta corrente\n");
+			say( "\nConta Corrente\n");
 			say( "cq - Saque\ncd - Deposito\ncs - Saldo\nce - Extrato\nct - Transferencia\n" );
 			say( "\nConta Poupanca\n");
 			say( "pq - Saque\npd - Deposito\npe - Saldo\npe - Extrato\npt - Transferencia\n" );
